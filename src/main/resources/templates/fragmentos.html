@@ -1,0 +1,248 @@
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+</head>
+
+<body>
+	<div th:fragment="topo">
+
+		<style>
+			.nav-container {
+				padding: .7rem;
+				position: relative;
+			}
+
+			svg:hover>g {
+				fill: #fff;
+				transition: ease-in .2s;
+			}
+
+			.site-header {
+				/* background-color: rgba(0, 0, 0, .85); */
+				background-color: #578ebe;
+			}
+
+			.nav-container>a,
+			.menu-header>a {
+				color: #ebf2f8;
+				transition: ease-in-out color .15s;
+				font-size: 1.125rem;
+			}
+
+			.nav-container>a:hover,
+			.menu-header>a:hover,
+			g {
+				color: #fff;
+				text-decoration: none;
+				display: block;
+			}
+
+			.menu-header {
+				display: flex;
+				align-items: center;
+				gap: 1.2rem;
+			}
+
+			.user-menu {
+				position: relative;
+			}
+
+			.user-img {
+				cursor: pointer;
+			}
+
+			.user-img img {
+				width: 50px;
+				height: 50px;
+				border-radius: 50%;
+			}
+
+			.sub-menu {
+				display: none;
+				position: absolute;
+				list-style: none;
+				top: 65px;
+				right: 5px;
+				background-color: #fff;
+				padding: 2px;
+				margin: 0;
+				border-radius: 5px;
+			}
+
+			.sub-menu::after {
+				content: "";
+				position: absolute;
+				right: 10px;
+				top: -10px;
+				margin-left: 10px;
+				width: 0px;
+				height: 0px;
+				border-left: 10px solid transparent;
+				border-right: 10px solid transparent;
+				border-bottom: 10px solid #ffffff;
+				clear: both;
+			}
+
+			.sub-menu li a {
+				padding: 5px;
+				border-radius: 4px;
+				color: #414141;
+				text-decoration: none;
+				width: 100px;
+				display: block;
+				transition: all 0.3s;
+
+			}
+
+			.sub-menu li:not(:last-child) {
+				border-bottom: 1px solid #ffca00;
+			}
+
+			.sub-menu li a:hover::before {
+				content: "";
+				position: absolute;
+				height: 25px;
+				width: 3px;
+				left: 8px;
+				background-color: #ffca00;
+			}
+
+			.sub-menu li:hover a {
+				background-color: #578ebe;
+				color: #ebf2f8;
+				cursor: pointer;
+				padding-left: 15px;
+			}
+
+			.menu-user-texto {
+				font-weight: 500;
+				display: inline-block;
+				color: #ebf2f8;
+				font-size: 17px;
+				/* cursor: pointer; */
+			}
+			.seta {
+				color: #ebf2f8;
+				font-size: 14px;
+			}
+
+			/* .user-menu:hover .sub-menu {
+				display: block;
+			} */
+
+			body {
+				background-color: #f5f5f5;
+			}
+		</style>
+
+		<nav class="site-header sticky-top py-1" th:if="${nomeusuario} !=null">
+			<div class="container nav-container d-flex flex-column flex-md-row justify-content-between">
+				<a class="py-2" href="/">
+					<svg version="1.0" xmlns="http://www.w3.org/2000/svg" height="40"
+						viewBox="0 0 1280.000000 1280.000000" preserveAspectRatio="xMidYMid meet">
+
+						<g transform="translate(0.000000,1280.000000) scale(0.100000,-0.100000)" fill="#ebf2f8"
+							stroke="none">
+							<path d="M4615 12476 c-167 -39 -293 -112 -436 -255 -116 -115 -199 -232 -279
+			   -391 -477 -954 -316 -2528 353 -3430 91 -123 249 -285 357 -366 354 -267 752
+			   -281 1071 -38 327 250 551 732 636 1369 21 164 25 672 5 840 -82 702 -291
+			   1283 -618 1722 -82 109 -243 273 -344 350 -94 71 -272 163 -365 188 -83 23
+			   -302 29 -380 11z" />
+							<path d="M8546 12274 c-311 -61 -636 -299 -905 -661 -346 -465 -580 -1080
+			   -668 -1758 -28 -216 -25 -698 5 -894 70 -447 219 -789 442 -1011 191 -192 431
+			   -281 675 -252 581 72 1154 706 1460 1616 254 755 281 1550 73 2156 -203 591
+			   -615 897 -1082 804z" />
+							<path d="M2095 9010 c-409 -65 -717 -395 -856 -919 -79 -301 -90 -716 -28
+			   -1081 143 -850 635 -1631 1217 -1933 298 -154 595 -181 850 -75 376 156 623
+			   560 704 1153 16 119 16 472 -1 610 -130 1102 -809 2069 -1564 2230 -89 19
+			   -247 26 -322 15z" />
+							<path d="M10570 8200 c-360 -77 -713 -330 -1006 -722 -318 -426 -532 -982
+			   -594 -1542 -16 -146 -13 -460 5 -601 122 -948 766 -1403 1495 -1059 391 185
+			   745 566 998 1073 480 960 449 2085 -73 2606 -220 220 -523 310 -825 245z" />
+							<path d="M6225 6421 c-662 -118 -1497 -813 -2237 -1861 -579 -821 -987 -1705
+			   -1109 -2405 -29 -168 -32 -468 -6 -583 41 -179 110 -297 244 -422 224 -207
+			   493 -329 830 -376 175 -24 529 -15 754 19 301 47 555 108 1124 272 550 158
+			   704 191 856 181 193 -13 338 -60 754 -243 298 -131 464 -193 606 -228 530
+			   -128 976 39 1435 537 137 148 179 220 222 377 24 90 26 110 26 321 0 191 -3
+			   245 -23 355 -118 667 -469 1473 -976 2240 -603 912 -1311 1569 -1902 1764
+			   -215 71 -398 87 -598 52z" />
+						</g>
+					</svg>
+				</a>
+				<div class="menu-header">
+					<a class="py-2 d-none d-md-inline-block" th:href="@{/categoria/listar}">Categorias</a>
+					<a class="py-2 d-none d-md-inline-block" th:href="@{/produto/listar}">Produtos</a>
+					<a class="py-2 d-none d-md-inline-block" th:href="@{/funcionario/listar}">Funcionarios</a>
+					<a class="py-2 d-none d-md-inline-block" th:href="@{/cliente/listar}">Clientes</a>
+					<a class="py-2 d-none d-md-inline-block" th:href="@{/venda/listar}">Vendas</a>
+
+				</div>
+				<div class="user-menu" id="user-menu">
+					<div class="user-img">
+						<img style="object-fit:contain" class="img-fluid rounded-circle"
+							th:src="@{'/funcionario/getimagem/'+ *{imgusuario}}" />
+						<span class="menu-user-texto" th:text="${nomeusuario}"></span> <span class="seta">▼</span>
+					</div>
+
+					<ul class="sub-menu">
+						<li><a th:href="@{/}">Perfil</a></li>
+						<li><a th:href="@{/logout}">Sair</a></li>
+					</ul>
+				</div>
+
+			</div>
+		</nav>
+
+		<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+			integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+			crossorigin="anonymous"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"
+			integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
+			crossorigin="anonymous"></script>
+		<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"
+			integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
+			crossorigin="anonymous"></script>
+	</div>
+
+	<div th:fragment="rodape">
+		<style>
+			footer {
+				background-color: #414141;
+				color: #FFF;
+				/* position: absolute;
+				bottom: 0;
+				left: 0; */
+				height: 3rem;
+				width: 100%;
+			}
+		</style>
+		<footer th:if="${nomeusuario} !=null" class="row d-flex align-items-center justify-content-center">
+			<span>Petlandia</span> &COPY; 2023
+		</footer>
+
+	</div>
+
+	<div th:fragment="script">
+		<script>
+			var url = "";
+			$(".excluir").on("click", function () {
+				// no clique do botão excluir, guardar a url para ser chamada na confirmação da janela modal
+				url = $(this).attr("data-value");
+				url = url.replace("{id}", $(this).attr("id"));
+			});
+
+			$("#ok_confirm").click(function () {   // botão de confirmação da janela modal, chamará a controller
+				document.location.href = "http://localhost:8080" + url;
+			});
+
+			$("#user-menu").click(function () {
+				$('.sub-menu').toggle();
+			});
+		</script>
+	</div>
+
+
+</body>
+
+</html>

@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+	<!-- Meta tags Obrigatórias -->
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+	<!-- Bootstrap CSS -->
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+		integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+
+	<title>Olá, mundo!</title>
+</head>
+
+<body>
+	<header th:include="fragmentos::topo">
+	</header>
+	<main class="container">
+		<h1>Cadastro de Dependentes</h1>
+<!--
+		<form method="post" th:action="@{/categoria/salvar}" 
+							th:object="${categoria}">
+			<div class="form-group">
+				<label for="exampleInputEmail1">Código</label>
+				<input th:field="*{id}" type="text" readonly class="form-control" id="exampleInputEmail1"
+					aria-describedby="emailHelp">
+
+			</div>
+			<div class="form-group">
+				<label for="exampleInputPassword1">Descrição</label>
+				<input th:field="*{descricao}" type="text" class="form-control" id="exampleInputPassword1"
+					placeholder="Descrição...">
+			</div>
+
+			<button type="submit" class="btn btn-primary">Salvar</button>
+		</form>-->
+
+		<div th:if="${retorno} !=null" class="row">
+
+			<span th:if="${retorno}" class="alert alert-success" th:text="${mensagem}"></span>
+			<span th:if="!${retorno}" class="alert alert-danger" th:text="${mensagem}"></span>
+		</div>
+
+
+	</main>
+	<footer th:include="fragmentos::rodape">
+	</footer>
+	<!-- JavaScript (Opcional) -->
+	<!-- jQuery primeiro, depois Popper.js, depois Bootstrap JS -->
+	<script src="https://code.jquery.com/jquery-3.6.4.min.js" integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8=" crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"
+		integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
+		crossorigin="anonymous"></script>
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"
+		integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
+		crossorigin="anonymous"></script>
+		
+	<script>
+		
+		$(document).ready(function (){
+			getFuncionarios("Ana");
+			salvarFuncionario();
+		});
+		
+		function getFuncionarios(nome){
+			
+			$.get("http://localhost:8080/dependentes/getFuncionarios/"+ nome ,
+			 function(resultado){
+				 console.log(resultado);
+
+			});
+		}
+		
+		function salvarFuncionario(){
+			var categoria = {id: 1, descricao:""}
+			
+			var model = {id: "null",
+						nome: "José Antonio Carlos",
+						dataNascimento: "2000-01-01",
+						// rendimento: 1800.5,
+						categoria: categoria,
+						imagem: "",
+						 };
+		$.ajax({
+			type: "POST",
+			url: "http://localhost:8080/dependentes/salvarFuncionario",
+			contentType: "application/json; charset=utf-8",
+			data: JSON.stringify(model) ,
+			dataType: "json",
+		success: function (jsonResult) {
+							console.log(jsonResult);
+				},
+		failure: function (response) {
+				alert("Erro ao carregar os dados: " + response);
+		}
+		});
+
+		}
+		
+	</script>
+		
+		
+		
+</body>
+
+</html>

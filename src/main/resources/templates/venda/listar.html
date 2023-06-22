@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+	<!-- Meta tags Obrigatórias -->
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+	<!-- Bootstrap CSS -->
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+		integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+
+	<title>Olá, mundo!</title>
+</head>
+
+<body>
+	<header th:include="fragmentos::topo"></header>
+
+	<main class="container">
+
+		<h1>Vendas</h1>
+
+		<div style="margin:20px">
+			<a class="btn btn-primary" th:href="@{/venda/novo}">
+				Incluir
+			</a>
+		</div>
+
+		<table class="table table-striped">
+			<thead>
+				<tr>
+					<th scope="col">Código</th>
+					<th scope="col">Data</th>
+					<th scope="col">Total</th>
+					<th scope="col">Operações</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:each="item:${lista}">
+					<th scope="row" th:text="${item.id}"></th>
+					<td th:text="${item.datavenda}"></td>
+					<td>R$ <span th:text="${#numbers.formatDecimal(item.valortotal, 0, 'POINT', 2, 'COMMA')}"></span>
+					</td>
+					<td>
+						<button class="btn btn-success exibir" type="button" th:id="${item.id}">Visualizar</button>
+						<a class="btn btn-warning" th:href="@{/venda/prealterar(id=${item.id})}">Alterar</a>
+						<button class="btn btn-danger excluir" data-target="#myModal" type="button" th:id="${item.id}"
+							data-value="/venda/excluir?id={id}" data-toggle="modal">Excluir</button>
+					</td>
+				</tr>
+
+			</tbody>
+		</table>
+
+		<!--MODAL VISUALIZAR-->
+		<div class="modal fade" tabindex="-1" role="dialog" id="myModal2">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close"></button>
+						<h4 class="modal-title">Itens da Venda:</h4>
+					</div>
+					<div class="modal-body">
+						<p>Confirma </p>
+						<!-- <span th:text="${item.id}"></span> -->
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+						<button type="button" class="btn btn-primary">Ok</button>
+					</div>
+				</div> <!-- /.modal-content -->
+			</div> <!-- /.modal-dialog -->
+		</div> <!-- /.modal -->
+
+		<!--MODAL EXCLUSÃO-->
+		<div class="modal fade" tabindex="-1" role="dialog" id="myModal" th:fragment="modal">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close"></button>
+						<h4 class="modal-title">Atenção</h4>
+					</div>
+					<div class="modal-body">
+						<p>Confirma a exclusão?</p>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+						<button id="ok_confirm" type="button" class="btn btn-primary">Ok</button>
+					</div>
+				</div> <!-- /.modal-content -->
+			</div> <!-- /.modal-dialog -->
+		</div> <!-- /.modal -->
+
+
+		<div th:if="${retorno} !=null" class="row">
+
+			<span th:if="${retorno}" class="alert alert-success" th:text="${mensagem}"></span>
+			<span th:if="!${retorno}" class="alert alert-danger" th:text="${mensagem}"></span>
+		</div>
+
+
+	</main>
+	<!-- <footer th:include="fragmentos::rodape"></footer> -->
+	<!-- JavaScript (Opcional) -->
+	<!-- jQuery primeiro, depois Popper.js, depois Bootstrap JS -->
+	<script src="https://code.jquery.com/jquery-3.6.4.min.js"
+		integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8=" crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"
+		integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
+		crossorigin="anonymous"></script>
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"
+		integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
+		crossorigin="anonymous"></script>
+	<div th:include="fragmentos::script">
+	</div>
+	<script>
+		$(document).ready(function () {
+
+			$(".exibir").click(function (e) {
+
+				visualizarItem(e.target.id);
+				$('#myModal2').modal('toggle')
+
+				console.log('i')
+
+
+			});
+
+
+		});
+
+		function visualizarItem(id) {
+			console.log('visualizar')
+			console.log(id)
+
+			let item = {
+				id: id
+			}
+
+			$.ajax({
+				url: "/venda/buscaritem",
+				type: "POST",
+				contentType: "application/json",
+				data: JSON.stringify(item),
+				success: function (response) {
+					// alert("Venda realizada com sucesso!")
+					console.log(response)
+				},
+				error: function (response) {
+					alert("Erro ao carregar os dados: " + response);
+				}
+			})
+		}
+	</script>
+</body>
+
+</html>
