@@ -27,7 +27,7 @@
 			 </a>
 		</div>
 
-		<table class="table table-striped">
+		<table class="table table-striped table-bordered">
 			<thead>
 				<tr>
 					<th scope="col">Código</th>
@@ -38,8 +38,7 @@
 			</thead>
 			<tbody>
 				<tr th:each="item:${lista}">
-					<th scope="row"
-					 th:text="${item.id}"></th>
+					<td th:text="${item.id}"></td>
 					<td th:text="${item.nome}"></td>
 					<td><a class="btn btn-info" th:href="@{/cliente/prealterar(id=${item.id})}"> Alterar</a></td>	
 					<td><button  class="btn btn-danger excluir" data-target="#myModal" type="button" th:id="${item.id}" data-value="/cliente/excluir?id={id}" data-toggle="modal" >Excluir</button></td>
@@ -76,7 +75,7 @@
 
 
 	</main>
-	<!-- <footer th:include="fragmentos::rodape"></footer> -->
+	<footer th:include="fragmentos::rodape"></footer>
 	<!-- JavaScript (Opcional) -->
 	<!-- jQuery primeiro, depois Popper.js, depois Bootstrap JS -->
 	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"

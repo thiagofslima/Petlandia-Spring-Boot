@@ -13,6 +13,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -71,7 +72,24 @@ public class VendaControlller {
 	public String listar(ModelMap model) {
 		model.addAttribute("nomeusuario", daoUser.getUsuarioLogado().getNome());
 		model.addAttribute("imgusuario", daoUser.getUsuarioLogado().getImagem());
-		model.addAttribute("lista", dao.findAll());
+
+		List<Venda> vendas = dao.findAll();
+
+		for (Venda venda : vendas) {
+			List<ItemVenda> itens = daoitemvenda.findVenda(venda.getId());
+			for (ItemVenda item : itens) {
+				Produto produto = daoproduto.findById(item.getProduto().getId());
+				item.setProduto(produto);
+			}
+			venda.setItens(itens);
+
+			Cliente cliente = daocliente.findById(venda.getCliente().getId());
+			venda.setCliente(cliente);
+		}
+
+
+
+		model.addAttribute("lista", vendas);
 		return "/venda/listar";
 	}
 
@@ -162,14 +180,48 @@ public class VendaControlller {
 		return new ResponseEntity<Object>(venda, HttpStatus.OK);
 
 	}
+
+	// @GetMapping("/itens-venda/{idVenda}")
+	// public String exibirItensVenda(@PathVariable("idVenda") Long idVenda,
+	// ModelMap model) {
+	// Venda venda = dao.findById(23); // Supondo que você tenha um método
+	// 'findById' no seu DAO para buscar a
+	// // venda pelo ID
+	// if (venda == null) {
+	// // Lógica para lidar com venda não encontrada
+	// return "redirect:/venda/listar"; // Redireciona para a página de listagem de
+	// vendas
+	// }
+
+	// model.addAttribute("nomeusuario", daoUser.getUsuarioLogado().getNome());
+	// model.addAttribute("imgusuario", daoUser.getUsuarioLogado().getImagem());
+	// model.addAttribute("itensVenda", venda.getItens()); // Supondo que a classe
+	// Venda tenha um método 'getItens' que
+	// // retorna os itens da venda
+
+	// return "/venda/exibir-itens";
+	// }
+
+	// @GetMapping("/venda/{id}/itens")
+	// public String exibirItensVenda(@PathVariable("id") Long vendaId, ModelMap
+	// model) {
+	// ItemVenda venda = daoitemvenda.findById(23); // Substitua por sua lógica para
+	// obter a venda pelo ID
+	// model.addAttribute("item", venda);
+	// return "/venda/modal"; // Substitua pelo nome do seu fragmento HTML para
+	// exibir os itens da venda
+	// }
+
 	List<ItemVenda> itemsVenda;
+
 	@PostMapping(path = "/buscaritem", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Object> salvar(@RequestBody ItemVenda item, ModelMap model) {
 		try {
 			itemsVenda = daoitemvenda.findVenda(item.getId());
 			// Venda teste = new Venda();
 			// Cliente cliente = daocliente.findById(venda.getCliente().getId());
-			// Funcionarios funcionario = daofuncionario.findById(daoUser.getUsuarioLogado().getId());
+			// Funcionarios funcionario =
+			// daofuncionario.findById(daoUser.getUsuarioLogado().getId());
 			// teste.setCliente(cliente);
 			// teste.setFuncionario(funcionario);
 			// teste.setDatavenda(LocalDate.now());
@@ -181,18 +233,17 @@ public class VendaControlller {
 
 			// for (ItemVenda itemVenda : itemsVenda) {
 
-			// 	ItemVenda item = new ItemVenda();
-			// 	Produto produto = daoproduto.findById(itemVenda.getProduto().getId());
-			// 	item.setProduto(produto);
-			// 	item.setQtde(itemVenda.getQtde());
-			// 	item.setValorunitario(itemVenda.getValorunitario());
-			// 	item.setVenda(teste);
-			// 	daoitemvenda.save(item);
+			// ItemVenda item = new ItemVenda();
+			// Produto produto = daoproduto.findById(itemVenda.getProduto().getId());
+			// item.setProduto(produto);
+			// item.setQtde(itemVenda.getQtde());
+			// item.setValorunitario(itemVenda.getValorunitario());
+			// item.setVenda(teste);
+			// daoitemvenda.save(item);
 
-			// 	produto.setEstoque(produto.getEstoque() - item.getQtde());
-			// 	daoproduto.save(produto);
+			// produto.setEstoque(produto.getEstoque() - item.getQtde());
+			// daoproduto.save(produto);
 			// }
-			
 
 		} catch (Exception e) {
 			return new ResponseEntity<Object>(e, HttpStatus.INTERNAL_SERVER_ERROR);

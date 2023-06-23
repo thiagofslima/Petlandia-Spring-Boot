@@ -26,11 +26,12 @@
 			</a>
 		</div>
 
-		<table class="table table-striped">
+		<table class="table table-striped table-bordered">
 			<thead>
 				<tr>
 					<th scope="col">Código</th>
 					<th scope="col">Data</th>
+					<th scope="col">Cliente</th>
 					<th scope="col">Total</th>
 					<th scope="col">Operações</th>
 				</tr>
@@ -38,19 +39,66 @@
 			<tbody>
 				<tr th:each="item:${lista}">
 					<th scope="row" th:text="${item.id}"></th>
-					<td th:text="${item.datavenda}"></td>
+					<td th:text="${#temporals.format(item.datavenda, 'dd/MM/yyyy')}"></td>
+					<td th:text="${item.cliente.nome}"></td>
 					<td>R$ <span th:text="${#numbers.formatDecimal(item.valortotal, 0, 'POINT', 2, 'COMMA')}"></span>
 					</td>
 					<td>
+						<button type="button" class="btn btn-primary" data-toggle="modal"
+							th:data-target="'#myModal3' + ${item.id}">Ver itens</button>
 						<button class="btn btn-success exibir" type="button" th:id="${item.id}">Visualizar</button>
 						<a class="btn btn-warning" th:href="@{/venda/prealterar(id=${item.id})}">Alterar</a>
 						<button class="btn btn-danger excluir" data-target="#myModal" type="button" th:id="${item.id}"
 							data-value="/venda/excluir?id={id}" data-toggle="modal">Excluir</button>
 					</td>
+					<!-- <td>
+                        <li th:each="produto : ${item.itens}" th:text="${produto.qtde}"></li>
+                    </td> -->
+
+
+
 				</tr>
 
 			</tbody>
 		</table>
+
+		<div th:each="item:${lista}">
+
+			<div class="modal fade" tabindex="-1" role="dialog" th:id="'myModal3' + ${item.id}" th:fragment="modal">
+				<div class="modal-dialog" role="document">
+					<div class="modal-content">
+						<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal" aria-label="Close"></button>
+							<h4 class="modal-title">Itens da Venda:</h4>
+						</div>
+						<div class="modal-body">
+							<p>Confirma </p>
+							<!-- <li th:each="produto : ${item.itens}" th:text="${produto.qtde}"></li> -->
+							<span th:text="${item.itens[0].produto.nome}"></span>
+
+
+							<table class="table table-striped table-bordered">
+								<thead>
+									<tr>
+										<th scope="col">Produto</th>
+										<th scope="col">Qtde</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr th:each="produto : ${item.itens}">
+										<td th:text="${produto.produto.nome}"></td>
+										<td th:text="${produto.qtde}"></td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-primary" data-dismiss="modal">Fechar</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
 
 		<!--MODAL VISUALIZAR-->
 		<div class="modal fade" tabindex="-1" role="dialog" id="myModal2">
@@ -62,7 +110,7 @@
 					</div>
 					<div class="modal-body">
 						<p>Confirma </p>
-						<!-- <span th:text="${item.id}"></span> -->
+						<!-- <span th:text="${produto.qtde}"></span> -->
 					</div>
 					<div class="modal-footer">
 						<button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
@@ -100,7 +148,7 @@
 
 
 	</main>
-	<!-- <footer th:include="fragmentos::rodape"></footer> -->
+	<footer th:include="fragmentos::rodape"></footer>
 	<!-- JavaScript (Opcional) -->
 	<!-- jQuery primeiro, depois Popper.js, depois Bootstrap JS -->
 	<script src="https://code.jquery.com/jquery-3.6.4.min.js"
@@ -111,6 +159,7 @@
 	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"
 		integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
 		crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
 	<div th:include="fragmentos::script">
 	</div>
 	<script>
