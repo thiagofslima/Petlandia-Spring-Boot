@@ -40,8 +40,7 @@
 			</thead>
 			<tbody>
 				<tr th:each="item:${lista}">
-					<th scope="row"
-					 th:text="${item.id}"></th>
+					<td th:text="${item.id}"></td>
 					<td th:text="${item.nome}"></td>
 					
 					<!-- <td th:text="${item.categoria.descricao}"></td> -->
@@ -56,8 +55,8 @@
 					</td>
 					     
 					<td>
-						<a class="btn btn-warning" th:href="@{/funcionario/prealterar(id=${item.id})}">Alterar</a>
-						<button  class="btn btn-danger excluir" data-target="#myModal" type="button" th:id="${item.id}" data-value="/funcionario/excluir?id={id}" data-toggle="modal">Excluir</button>
+						<a class="btn btn-warning alterar" th:href="@{/funcionario/prealterar(id=${item.id})}"></a>
+						<button  class="btn btn-danger excluir" data-target="#myModal" type="button" th:id="${item.id}" data-value="/funcionario/excluir?id={id}" data-toggle="modal"></button>
 					</td>	
 				</tr>
 			

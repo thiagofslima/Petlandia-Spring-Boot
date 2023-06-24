@@ -42,8 +42,7 @@
 			</thead>
 			<tbody>
 				<tr th:each="item:${lista}">
-					<th scope="row"
-					 th:text="${item.id}"></th>
+					<td th:text="${item.id}"></td>
 					<td th:text="${item.nome}"></td>
 					<td th:text="${item.descricao}"></td>
 					<td>R$ <span th:text="${#numbers.formatDecimal(item.precovenda, 0, 'POINT', 2, 'COMMA')}"></span></td>
@@ -55,8 +54,8 @@
 						 th:src="@{'/produto/getimagem/'+ *{item.imagem}}"/>
 					</td>
 					<td>
-						<a class="btn btn-warning" th:href="@{/produto/prealterar(id=${item.id})}">Alterar</a>
-						<button  class="btn btn-danger excluir" data-target="#myModal" type="button" th:id="${item.id}" data-value="/produto/excluir?id={id}" data-toggle="modal">Excluir</button>
+						<a class="btn btn-warning alterar" th:href="@{/produto/prealterar(id=${item.id})}"></a>
+						<button  class="btn btn-danger excluir" data-target="#myModal" type="button" th:id="${item.id}" data-value="/produto/excluir?id={id}" data-toggle="modal"></button>
 					</td>
 				</tr>
 			
