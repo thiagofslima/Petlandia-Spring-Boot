@@ -87,8 +87,6 @@ public class VendaControlller {
 			venda.setCliente(cliente);
 		}
 
-
-
 		model.addAttribute("lista", vendas);
 		return "/venda/listar";
 	}
@@ -96,6 +94,8 @@ public class VendaControlller {
 	@GetMapping("/excluir")
 	public String excluir(@RequestParam(name = "id") int id,
 			ModelMap model) {
+		model.addAttribute("nomeusuario", daoUser.getUsuarioLogado().getNome());
+		model.addAttribute("imgusuario", daoUser.getUsuarioLogado().getImagem());
 		try {
 			dao.delete(id);
 			model.addAttribute("mensagem",

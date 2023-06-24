@@ -68,6 +68,8 @@ public class ClienteController {
 	@GetMapping("/excluir")
 	public String excluir(@RequestParam(name = "id") int id,
 			ModelMap model) {
+		model.addAttribute("nomeusuario", daoUser.getUsuarioLogado().getNome());
+		model.addAttribute("imgusuario", daoUser.getUsuarioLogado().getImagem());
 		try {
 			dao.delete(id);
 			model.addAttribute("mensagem",
@@ -87,7 +89,7 @@ public class ClienteController {
 			@ModelAttribute("cliente") Cliente cat, ModelMap model) {
 		try {
 			model.addAttribute("nomeusuario", daoUser.getUsuarioLogado().getNome());
-		model.addAttribute("imgusuario", daoUser.getUsuarioLogado().getImagem());
+			model.addAttribute("imgusuario", daoUser.getUsuarioLogado().getImagem());
 			Validator validator;
 			ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
 			validator = factory.getValidator();

@@ -39,41 +39,37 @@ import jakarta.validation.Validation;
 import jakarta.validation.Validator;
 import jakarta.validation.ValidatorFactory;
 
-import  br.edu.toledoprudente.pojo.AppAuthority;
+import br.edu.toledoprudente.pojo.AppAuthority;
 
 @Controller
 @RequestMapping("/funcionario")
 public class FuncionarioController {
-	
-	
+
 	@Autowired
 	private FuncionariosDAO dao;
-	
+
 	// @Autowired
 	// private CategoriaDAO daocategoria;
 
 	@Autowired
 	UsersDAO daoUser;
-	
+
 	@GetMapping("/novo")
 	public String novo(ModelMap model) {
-		Funcionarios cli =  new Funcionarios();
+		Funcionarios cli = new Funcionarios();
 		cli.setUsuario(new Users());
 		try {
 			model.addAttribute("nomeusuario", daoUser.getUsuarioLogado().getNome());
-		model.addAttribute("imgusuario", daoUser.getUsuarioLogado().getImagem());
-		}
-		catch(Exception ex)
-		{
+			model.addAttribute("imgusuario", daoUser.getUsuarioLogado().getImagem());
+		} catch (Exception ex) {
 			model.addAttribute("mensagem",
 					"Erro nome usuario!");
 		}
-		
+
 		model.addAttribute("funcionario", cli);
 		return "/funcionario/index";
 	}
-	
-	
+
 	@GetMapping("/listar")
 	public String listar(ModelMap model) {
 		model.addAttribute("nomeusuario", daoUser.getUsuarioLogado().getNome());
@@ -82,96 +78,88 @@ public class FuncionarioController {
 				dao.findAll());
 		return "/funcionario/listar";
 	}
-	
+
 	@GetMapping("/prealterar")
 	public String preAlterar(
-		@RequestParam(name="id") int id, 
-		ModelMap model) {
+			@RequestParam(name = "id") int id,
+			ModelMap model) {
 		model.addAttribute("funcionario",
 				dao.findById(id));
-		
+
 		return "/funcionario/index";
 	}
-	
+
 	@GetMapping("/excluir")
-	public String excluir(@RequestParam(name="id")int id, 
+	public String excluir(@RequestParam(name = "id") int id,
 			ModelMap model) {
+		model.addAttribute("nomeusuario", daoUser.getUsuarioLogado().getNome());
+		model.addAttribute("imgusuario", daoUser.getUsuarioLogado().getImagem());
 		try {
 			dao.delete(id);
 			model.addAttribute("mensagem",
 					"Exclusão efetuada");
-			model.addAttribute("retorno",true);
-		}
-		catch (Exception e) {
+			model.addAttribute("retorno", true);
+		} catch (Exception e) {
 			model.addAttribute("mensagem",
 					"Exclusão não pode ser efetuada!");
-			model.addAttribute("retorno",false);
+			model.addAttribute("retorno", false);
 		}
 		model.addAttribute("lista", dao.findAll());
 		return "/funcionario/listar";
 	}
-	
-	
+
 	@PostMapping("/salvar")
 	public String salvar(
-			@ModelAttribute("funcionario") 
-			Funcionarios cat, ModelMap model,
+			@ModelAttribute("funcionario") Funcionarios cat, ModelMap model,
 			@RequestParam("file") MultipartFile file) {
 		try {
-			
-			
+
 			Validator validator;
 			ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
 			validator = factory.getValidator();
-			Set<ConstraintViolation<Funcionarios>> constraintViolations =
-			validator.validate( cat );
+			Set<ConstraintViolation<Funcionarios>> constraintViolations = validator.validate(cat);
 			String errors = "";
 			for (ConstraintViolation<Funcionarios> constraintViolation : constraintViolations) {
-			errors = errors + constraintViolation.getMessage() + ". "; }
-			
-			//validar a imagem
-			if(file.isEmpty()) {
-				errors = errors +  "Selecione uma imagem.";
+				errors = errors + constraintViolation.getMessage() + ". ";
 			}
-			
-			
-			if(errors!="")
-			{
-			//tem erros
-			model.addAttribute("funcionario",cat);
-			model.addAttribute("mensagem", errors);
-			model.addAttribute("retorno", false);
-			return "/funcionario/index";
+
+			// validar a imagem
+			if (file.isEmpty()) {
+				errors = errors + "Selecione uma imagem.";
 			}
-			else
-			{
-			
-				Users usu=	cat.getUsuario();//obter dados do usuario do form
-				//criptografar a senha
+
+			if (errors != "") {
+				// tem erros
+				model.addAttribute("funcionario", cat);
+				model.addAttribute("mensagem", errors);
+				model.addAttribute("retorno", false);
+				return "/funcionario/index";
+			} else {
+
+				Users usu = cat.getUsuario();// obter dados do usuario do form
+				// criptografar a senha
 				String senha = "{bcrypt}" + new BCryptPasswordEncoder()
 						.encode(usu.getPassword());
-			
+
 				usu.setPassword(senha);
-				
-				
+
 				usu.setEnabled(true);
 				usu.setAdmin(false);
-				
-				//setar a autorização
+
+				// setar a autorização
 				Set<AppAuthority> appAuthorities = new HashSet<AppAuthority>();
 				AppAuthority app = new AppAuthority();
 				app.setAuthority("USER");
 				app.setUsername(usu.getUsername());
 				appAuthorities.add(app);
-				usu.setAppAuthorities( appAuthorities);
-
+				usu.setAppAuthorities(appAuthorities);
 
 				Random random = new Random();
-					String nomeArquivo = random.nextInt() + 
+				String nomeArquivo = random.nextInt() +
 						file.getOriginalFilename();
 				cat.setImagem(nomeArquivo);
-			
-				if(cat.getId()==null)
+
+				if (cat.getId() == null)
 					dao.save(cat);
 				else
 					dao.update(cat);
@@ -179,56 +167,57 @@ public class FuncionarioController {
 						"Salvo com sucesso!");
 				model.addAttribute("retorno",
 						true);
-				
-				try {        
+
+				try {
 					byte[] bytes = file.getBytes();
 					Path path = Paths.get(System.getProperty("user.dir") +
-						"\\src\\main\\resources\\static\\image\\" + nomeArquivo);
+							"\\src\\main\\resources\\static\\image\\" + nomeArquivo);
 					Files.write(path, bytes);
-				}
-				catch (IOException e) {
+				} catch (IOException e) {
 					e.printStackTrace();
 				}
 			}
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			model.addAttribute("mensagem",
-					"Erro ao salvar!" 
-			+ e.getMessage());
+					"Erro ao salvar!"
+							+ e.getMessage());
 			model.addAttribute("retorno",
 					false);
 		}
-		
+
 		return "/funcionario/index";
 	}
-	
-	/*método usado pra retornar dados para select html*/
+
+	/* método usado pra retornar dados para select html */
 	// @ModelAttribute(name = "listacategoria")
 	// public List<Categoria> listaCategoria(){
-	// 	return daocategoria.findAll();
-		
-	// }
-	
-	
-	  @ResponseBody
-	  @RequestMapping(value = "/getimagem/{nome}", method = RequestMethod.GET)
-	    public HttpEntity<byte[]> download(@PathVariable(value = "nome") String nome) throws IOException {
-	        byte[] arquivo =Files.readAllBytes( Paths.get(System.getProperty("user.dir") +"\\src\\main\\resources\\static\\image\\" + nome));
-	        HttpHeaders httpHeaders = new HttpHeaders();
-	        switch (nome.substring(nome.lastIndexOf(".") + 1).toUpperCase()) {
-		case "JPG":
-			 httpHeaders.setContentType(MediaType.IMAGE_JPEG);break;
-		case "GIF":
-			 httpHeaders.setContentType(MediaType.IMAGE_GIF); break;
-		case "PNG":
-			 httpHeaders.setContentType(MediaType.IMAGE_PNG); break;
-		
-		default:
-		break;
-	}        httpHeaders.setContentLength(arquivo.length);
-	        HttpEntity<byte[]> entity = new HttpEntity<byte[]>( arquivo, httpHeaders);
-	        return entity;}
+	// return daocategoria.findAll();
 
-	
-	
+	// }
+
+	@ResponseBody
+	@RequestMapping(value = "/getimagem/{nome}", method = RequestMethod.GET)
+	public HttpEntity<byte[]> download(@PathVariable(value = "nome") String nome) throws IOException {
+		byte[] arquivo = Files.readAllBytes(
+				Paths.get(System.getProperty("user.dir") + "\\src\\main\\resources\\static\\image\\" + nome));
+		HttpHeaders httpHeaders = new HttpHeaders();
+		switch (nome.substring(nome.lastIndexOf(".") + 1).toUpperCase()) {
+			case "JPG":
+				httpHeaders.setContentType(MediaType.IMAGE_JPEG);
+				break;
+			case "GIF":
+				httpHeaders.setContentType(MediaType.IMAGE_GIF);
+				break;
+			case "PNG":
+				httpHeaders.setContentType(MediaType.IMAGE_PNG);
+				break;
+
+			default:
+				break;
+		}
+		httpHeaders.setContentLength(arquivo.length);
+		HttpEntity<byte[]> entity = new HttpEntity<byte[]>(arquivo, httpHeaders);
+		return entity;
+	}
+
 }
