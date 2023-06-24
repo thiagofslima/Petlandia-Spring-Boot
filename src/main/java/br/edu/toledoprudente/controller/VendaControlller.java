@@ -153,7 +153,7 @@ public class VendaControlller {
 			vendaI.setCliente(cliente);
 			vendaI.setFuncionario(funcionario);
 			vendaI.setDatavenda(LocalDate.now());
-			vendaI.setValortotal(new BigDecimal(45.99));
+			vendaI.setValortotal(venda.getValortotal());
 
 			dao.save(vendaI);
 
