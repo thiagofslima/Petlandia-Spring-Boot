@@ -57,29 +57,16 @@
 					placeholder="data nascimento...">
 			</div>
 			
-			<!-- <div class="form-group">
-				<label for="exampleInputPassword1">Rendimento</label>
-				<input th:field="*{rendimento}" type="text" class="form-control" id="exampleInputPassword1"
-					placeholder="rendimento...">
-			</div> -->
-			
-			<!-- <div class="form-group">
-				<label for="exampleInputPassword1">Categoria</label>
-				<select class="form-control" 
-				th:field="*{categoria}">
-					<option value="">Selecione uma categoria</option>
-					<option th:each="item:${listacategoria}" 
-					th:value="${item.id}"
-					th:text="${item.descricao}"
-					 ></option>
-				</select>
-			</div> -->
-			
 			<div class="form-group">
 				<label>Imagem</label>
 				 <input type="file" 
 				  id="file"
 				   name="file"/>
+			</div>
+
+			<div class="form-group">
+				<label for="chkAdmin">Admin</label>
+				<input th:checked="*{usuario.isAdmin}" type="checkbox" id="chkAdmin">
 			</div>
 
 			<a class="btn btn-secondary" th:if="${nomeusuario} == null" href="/">Voltar</a>

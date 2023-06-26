@@ -38,21 +38,6 @@ public class Funcionarios extends AbstractEntity<Integer> {
 	@DateTimeFormat(iso = ISO.DATE)
 	private LocalDate dataNascimento;
 	
-	// @NotNull(message = "Informe um rendimento!")
-	// @PositiveOrZero(message = "Rendimento deve ser maior ou igual a zero!")
-	// @Column(name="rendimento", nullable = true, columnDefinition = "DECIMAL(10,2) DEFAULT 0.00")
-	// @NumberFormat(style = Style.CURRENCY, 
-	// pattern = "#,##0.00")
-	// private BigDecimal rendimento;
-	
-	
-	// @NotNull(message = "Informe uma categoria!")
-	// @ManyToOne(cascade=CascadeType.PERSIST)
-	// @JoinColumn(name="idcategoria")
-	// private Categoria categoria;
-	
-	
-	
 	
 	public Users getUsuario() {
 		return usuario;
@@ -79,14 +64,6 @@ public class Funcionarios extends AbstractEntity<Integer> {
 		this.imagem = imagem;
 	}
 
-	// public Categoria getCategoria() {
-	// 	return categoria;
-	// }
-
-	// public void setCategoria(Categoria categoria) {
-	// 	this.categoria = categoria;
-	// }
-
 	public LocalDate getDataNascimento() {
 		return dataNascimento;
 	}
@@ -95,13 +72,6 @@ public class Funcionarios extends AbstractEntity<Integer> {
 		this.dataNascimento = dataNascimento;
 	}
 
-	// public BigDecimal getRendimento() {
-	// 	return rendimento;
-	// }
-
-	// public void setRendimento(BigDecimal rendimento) {
-	// 	this.rendimento = rendimento;
-	// }
 
 	public String getNome() {
 		return nome;

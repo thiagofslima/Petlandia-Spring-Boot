@@ -113,6 +113,8 @@ public class FuncionarioController {
 			@ModelAttribute("funcionario") Funcionarios cat, ModelMap model,
 			@RequestParam("file") MultipartFile file) {
 		try {
+			model.addAttribute("nomeusuario", daoUser.getUsuarioLogado().getNome());
+			model.addAttribute("imgusuario", daoUser.getUsuarioLogado().getImagem());
 
 			Validator validator;
 			ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
@@ -144,7 +146,7 @@ public class FuncionarioController {
 				usu.setPassword(senha);
 
 				usu.setEnabled(true);
-				usu.setAdmin(false);
+				// usu.setAdmin(false);
 
 				// setar a autorização
 				Set<AppAuthority> appAuthorities = new HashSet<AppAuthority>();
@@ -159,14 +161,26 @@ public class FuncionarioController {
 						file.getOriginalFilename();
 				cat.setImagem(nomeArquivo);
 
-				if (cat.getId() == null)
+				Users temUsuario = daoUser.findByUserName(usu.getUsername());
+				boolean deuCerto = true;
+
+				if (cat.getId() == null && temUsuario == null) {
 					dao.save(cat);
-				else
+					model.addAttribute("mensagem",
+							"Salvo com sucesso!");
+
+				} else if (cat.getId() != null && (temUsuario == null || temUsuario.getId() == cat.getId())) {
 					dao.update(cat);
-				model.addAttribute("mensagem",
-						"Salvo com sucesso!");
+					model.addAttribute("mensagem",
+							temUsuario);
+				} else {
+					deuCerto = false;
+					model.addAttribute("mensagem",
+							"Usuário já existe!");
+				}
+
 				model.addAttribute("retorno",
-						true);
+						deuCerto);
 
 				try {
 					byte[] bytes = file.getBytes();
