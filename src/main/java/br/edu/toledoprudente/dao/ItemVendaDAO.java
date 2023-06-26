@@ -16,16 +16,15 @@ public class ItemVendaDAO extends AbstractDao<ItemVenda, Integer> {
 		return lista;
 	}
 
-public List<Object[]> getProdutosMaisVendidos() {
-	int quantidade = 5;
-    String jpql = "select iv.id, iv.produto.nome, sum(iv.qtde) " +
-                  "FROM ItemVenda iv group by iv.produto.id";
-    
-    TypedQuery<Object[]> query = entityManager.createQuery(jpql, Object[].class);
-    query.setMaxResults(quantidade);
-    
-    return query.getResultList();
-}
+	public List<Object[]> getProdutosMaisVendidos() {
+		int quantidade = 5;
+		String jpql = "select iv.id, iv.produto.nome, sum(iv.qtde) " +
+				"FROM ItemVenda iv group by iv.produto.id";
 
+		TypedQuery<Object[]> query = entityManager.createQuery(jpql, Object[].class);
+		query.setMaxResults(quantidade);
+
+		return query.getResultList();
+	}
 
 }

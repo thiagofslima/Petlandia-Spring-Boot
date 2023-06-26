@@ -30,6 +30,9 @@ public class HomeController {
 
 	@Autowired
 	ItemVendaDAO daoitemvenda;
+
+	@Autowired
+	UsersDAO daouser;
 	
 	@GetMapping("/")
 	public String home(ModelMap model) {
@@ -40,6 +43,7 @@ public class HomeController {
 		model.addAttribute("countclientes", daocliente.countClientes());
 		model.addAttribute("countprodutos", daoproduto.countProdutos());
 		model.addAttribute("maisvendidos", daoitemvenda.getProdutosMaisVendidos());
+		model.addAttribute("isadmin", daouser.getIsAdmin());
 		// model.addAttribute("imgusuario", dao.
 		return "index";
 	}
